@@ -1,11 +1,12 @@
 
 const STORE = {
   item: [ {name: 'apples', checked: false}, {name: 'oranges', checked: false}, {name: 'milk', checked: true}, {name: 'bread', checked: false} ],
-  showChecked: true
+  showChecked: true,
+  searchFilter: ''
 };
 
 
-//Useful function for finding item index from the Html
+//  (>'')>  Useful function for finding item index from the Html
 
 function getItemIndexFromHtml(item) {
   const itemIndexString = $(item)
@@ -13,6 +14,8 @@ function getItemIndexFromHtml(item) {
     .attr('data-item-index');
   return parseInt(itemIndexString, 10);
 }
+
+//  (>'')>  Useful function for fixing truncated arrays
 
 function checkedIndexFix(index) {
   let i = 0
@@ -24,23 +27,61 @@ function checkedIndexFix(index) {
   return i - 1;
 }
 
-// User can press a switch/checkbox to toggle between displaying all items or displaying only items that are unchecked
-//
-// 1.  make a switch/checkbox in html in the form  ------------------------- DONE 
-// 2.  write code to either display checked items or not--------------------
-//
 
 
 
- 
-  //when the user checks the box, change the value of STORE.showChecked to "true"
+  // sets STORE.searchFilter to the contents of the search box 
+
+function setSearchQuery(obj) {
+  $('#list-search-filter').on('keyup', function(event) {
+    event.preventDefault();
+    const query = $('.js-shopping-list-search').val().toLowerCase();  
+    obj.searchFilter = query;
+  });
+}
+
+
+function filterSearchResults() { 
+  if (STORE.searchFilter.length > 4) {
+    console.log(STORE.searchFilter);
+    //$('.js-shopping-list')
+            
+    //});
+  }
+}
+
+
+//$('#list-search-filter').on('keyup', function () {
+//  const value = $('.js-shopping-list-search').val().toLowerCase();
+//  console.log(value);
+//    $('.js-shopping-list').filter(function() {
+//      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+//    });
+//});
+
+
+function handleSearchQuery() {
+  setSearchQuery(STORE);  
+  filterSearchResults();
+  renderShoppingList();
+}
+
+
+
+
+
+//--------------------------------------------------------------------------------------------------//
+//HERE LIVES handleDisplayChecked() which hides values from the list if if "show checked" is changed
+
+    //when the user checks the box, change the value of STORE.showChecked to "true"
 function getShowCheckedStatus(obj) {
     obj.showChecked = !obj.showChecked;
-}   //its 2am and this function 
+}    
 
-// dont render html elements if STORE['item'][index].checked === true
+  // dont render html elements if STORE['item'][index].checked === true
 
-  //iterate through the list of items, make a new list of items if checked value is false ....  DONE
+    //iterate through the list of items, make a new list of items if checked value is false 
+
 function notCheckedItems() {
   const visibleItems = [];
   STORE['item'].forEach(item => {
@@ -51,7 +92,7 @@ function notCheckedItems() {
   return visibleItems;
 }   
 
-  //when box is unchecked => hide all elements that are checked. When the user checks the box => display all items 
+    //when box is unchecked => hide all elements that are checked. When the user checks the box => display all items 
 function handleDisplayChecked() {
   $('.display-checked-item').change(function() {
   getShowCheckedStatus(STORE);
@@ -59,11 +100,10 @@ function handleDisplayChecked() {
   });
 }
 
-
-
 // --------------------------------------------------------------------------------------------------//
 // HERE LIVES renderShoppingList() which initially renders the page
-// It should also be called at the end of any 'handler' functions
+
+//  *** renderShoppingList should be called at the end of any 'handler' functions ***  //
 
 function generateItemHtml(item, itemIndex) {
   const checkedClass = item.checked ? 'shopping-item__checked' : '';
@@ -101,11 +141,10 @@ function renderShoppingList(){
 // --------------------------------------------------------------------------------------------------//
 // HERE LIVES handleAddItem() which deals with adding new items to our STORE
 
-//First we need to update STORE
+    //  adds a new shopping item to the data
 function addItemToShoppingList(itemName) {
   STORE['item'].push({name: itemName, checked: false})
 }
-
 
 function handleAddItem() {
   $('#js-shopping-list-form').submit(function(event) {
@@ -118,8 +157,9 @@ function handleAddItem() {
 } //-------------------------------------------------------------------------------------added to $(main)
 
 // --------------------------------------------------------------------------------------------------//
-// HERELIVES handleToggleItem() which deals with the 'check' button on the app
+// HERE LIVES handleToggleItem() which deals with the 'check' button on the app
 
+    //fixes the index for displayed items if filtering and ads a strikethrough
 function changeItemCheckedStatus(index) {
   if(STORE.showChecked === false) {
     index = checkedIndexFix(index)    
@@ -138,6 +178,7 @@ function handleToggleItem(){
 // --------------------------------------------------------------------------------------------------//
 // HERE LIVES handleDeleteItem() which deals with the 'delete' button on the app
 
+    // fixes the index for displayed items if filtering and deletes items from the list 
 function deleteItemFromStore(index) {
   if (STORE.showChecked === false) {
     index = checkedIndexFix(index);
@@ -164,8 +205,8 @@ function main() {
   handleAddItem();        //working 
   handleToggleItem();     //working
   handleDeleteItem();     //working
-  handleDisplayChecked();
-  
+  handleDisplayChecked(); //working
+  handleSearchQuery();
 }
 $(main)
 

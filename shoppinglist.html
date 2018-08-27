@@ -16,10 +16,18 @@
         <input type="text" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="e.g., broccoli">
         <button type="submit">Add item</button>
       </form>
+
      <form id='js-display-options'>  
        <label for='js-display-checked'>Show Checked Items</label> 
        <input type="checkbox" name='js-display-checked' class='display-checked-item' checked> 
      </form>
+     
+     <form id='list-search-filter'>
+       <label for='search-query'>search for an item</label>
+       <input type='text' name='searchquery' class='js-shopping-list-search' placeholder='e.g., kombucha'>
+       <button type='submit'>Clear Search</button>
+     </form>
+      
       <ul class="shopping-list js-shopping-list">
       </ul>
     </div>
